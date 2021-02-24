@@ -78,7 +78,7 @@ D	[0-9]
 {D}+	                  { yylval.valor = strdup(yytext); return ENTERO;}
 {D}+"."{D}*             { yylval.valor = strdup(yytext); return DECIMAL;}
 L?\"(\\.|[^\\"])*\"		  { yylval.valor = strdup(yytext); return(CADENA); }
-L?'(\\.|[^\\'])'		    { yylval.valor = strdup(yytext); return(CARECTER); }
+L?'(\\.|[^\\'])'		    { yylval.valor = strdup(yytext); return(CARACTER); }
 
 
 
