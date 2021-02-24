@@ -83,7 +83,7 @@ L?\"(\\.|[^\\"])*\"		  { yylval.valor = strdup(yytext); return(CADENA); }
 L?'(\\.|[^\\'])'		    { yylval.valor = strdup(yytext); return(CARACTER); }
 
 
-
+[ \t\v\n\f]		{ yylval.valor = strdup(yytext); }
 .			{ /* ignorar otros caracteres */ }
 
 
