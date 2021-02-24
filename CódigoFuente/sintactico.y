@@ -86,17 +86,17 @@ Declaraciones
   ;
 
 DeclararVariable
-  : Tipo IDENTIFICADOR ';'                    {}
-  | CHAR IDENTIFICADOR '=' CARACTER ';'       {}
-  | INT IDENTIFICADOR '=' ENTERO ';'          {}
-  | FLOAT IDENTIFICADOR '=' DECIMAL ';'       {}
-  | STRING IDENTIFICADOR '=' CADENA ';'       {}
+  : Tipo IDENTIFICADOR ';'                    {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable: ");strcat($1,tmp); strcat($1,$2);$$=$1;}
+  | CHAR IDENTIFICADOR '=' CARACTER ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable caracter: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
+  | INT IDENTIFICADOR '=' ENTERO ';'          {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable entero: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
+  | FLOAT IDENTIFICADOR '=' DECIMAL ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable decimal: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
+  | STRING IDENTIFICADOR '=' CADENA ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable cadena: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
   ;
 
 
   DeclararConstante
-    : CONST CHAR IDENTIFICADOR '=' CARACTER ';'       {}
-    | CONST INT IDENTIFICADOR '=' ENTERO ';'          {}
-    | CONST FLOAT IDENTIFICADOR '=' DECIMAL ';'       {}
-    | CONST STRING IDENTIFICADOR '=' CADENA ';'       {}
+    : CONST CHAR IDENTIFICADOR '=' CARACTER ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante caracter: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);strcat($1,$5);$$=$1;}
+    | CONST INT IDENTIFICADOR '=' ENTERO ';'          {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante entero: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);strcat($1,$5);$$=$1;}
+    | CONST FLOAT IDENTIFICADOR '=' DECIMAL ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante decimal: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);strcat($1,$5);$$=$1;}
+    | CONST STRING IDENTIFICADOR '=' CADENA ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante cadena: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);strcat($1,$5);$$=$1;}
     ;
