@@ -37,6 +37,8 @@
 %type <valor> Codigo
 %type <valor> Linea
 %type <valor> Declaraciones
+%type <valor> DeclararVariable
+%type <valor> DeclararConstante
 
 
 
@@ -77,3 +79,24 @@ Linea
   : "\n"                  {$$=$1;}
   | Declaraciones "\n"    {$$=$1;}
   ;
+
+Declaraciones
+  :DeclararVariable       {$$=$1;}
+  |DeclararConstante      {$$=$1;}
+  ;
+
+DeclararVariable
+  : Tipo IDENTIFICADOR ';'                    {}
+  | CHAR IDENTIFICADOR '=' CARACTER ';'       {}
+  | INT IDENTIFICADOR '=' ENTERO ';'          {}
+  | FLOAT IDENTIFICADOR '=' DECIMAL ';'       {}
+  | STRING IDENTIFICADOR '=' CADENA ';'       {}
+  ;
+
+
+  DeclararConstante
+    : CONST CHAR IDENTIFICADOR '=' CARACTER ';'       {}
+    | CONST INT IDENTIFICADOR '=' ENTERO ';'          {}
+    | CONST FLOAT IDENTIFICADOR '=' DECIMAL ';'       {}
+    | CONST STRING IDENTIFICADOR '=' CADENA ';'       {}
+    ;
