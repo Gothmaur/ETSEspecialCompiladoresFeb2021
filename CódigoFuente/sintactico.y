@@ -14,22 +14,17 @@
 	char *valor;
 }
 
-%token <valor> CHAR INT FLOAT STRING CONST VOID
+
 
 %token <valor> IDENTIFICADOR ENTERO DECIMAL CADENA CARACTER
-
 %token <valor> IF ELSE SWITCH CASE BREAK DEFAULT WHILE DO FOR RETURN
-
 %token <valor> ASIGNACION_SUM ASIGNACION_RES ASIGNACION_MUL ASIGNACION_DIV ASIGNACION_MOD
-
 %token <valor> OP_INC OP_DEC
-
 %token <valor> OP_AND OP_OR OP_MENIG OP_MAYIG OP_IGUAL OP_DIF
-
 %token <valor>  ';' '{' '}' ',' ':' '=' '(' ')' '[' ']'
 %token <valor> '.' '&' '!' '-' '+' '*' '/' '%' '<' '>' '^' '|' '?'
+%token <valor> CHAR INT FLOAT STRING CONST MAIN
 
-%type <valor> Funcion
 %type <valor> Tipo
 %type <valor> Contenido
 %type <valor> Lista_atributos
@@ -40,16 +35,18 @@
 %type <valor> DeclararVariable
 %type <valor> DeclararConstante
 
+%left Lista_atributos
+%left Codigo
 
+%start Funcion
 
-%start unidad_traduccion
 %%
 
 Funcion
-  : IDENTIFICADOR '(' ')' Contenido                     { printf("Se declara funcion %s\nContiene lo siguiente:\n%s",$1,$4);}
-  | IDENTIFICADOR '(' Lista_atributos ')' Contenido     { printf("Se declara funcion %s\nContiene los siguientes atributos: %s\nContiene lo siguiente:\n%s",$1,$3,$5);}
-  | "principal" '(' ')' Contenido                       { printf("Se declara funcion %s\nContiene lo siguiente:\n%s",$1,$4);}
-  | "principal" '(' Lista_atributos ')' Contenido       { printf("Se declara funcion %s\nContiene los siguientes atributos: %s\nContiene lo siguiente: \n%s",$1,$3,$5);}
+  : IDENTIFICADOR '(' ')' Contenido                     { char *tmp=strdup($1);printf("Se declara funcion %s\nContiene lo siguiente:\n%s",tmp,$4);}
+  | IDENTIFICADOR '(' Lista_atributos ')' Contenido     { char *tmp=strdup($1);printf("Se declara funcion %s\nContiene los siguientes atributos: %s\nContiene lo siguiente:\n%s",tmp,$3,$5);}
+  | MAIN '(' ')' Contenido                       { printf("Se declara funcion %s\nContiene lo siguiente:\n%s",$1,$4);}
+  | MAIN '(' Lista_atributos ')' Contenido       { printf("Se declara funcion %s\nContiene los siguientes atributos: %s\nContiene lo siguiente: \n%s",$1,$3,$5);}
 ;
 
 Lista_atributos
@@ -76,8 +73,7 @@ Codigo
   ;
 
 Linea
-  : "\n"                  {$$=$1;}
-  | Declaraciones "\n"    {$$=$1;}
+  : Declaraciones    {$$=$1;}
   ;
 
 Declaraciones

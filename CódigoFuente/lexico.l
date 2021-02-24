@@ -18,7 +18,6 @@ D	[0-9]
 "cadena"        {yylval.valor = strdup(yytext);return STRING;}
 
 "constante"			{yylval.valor = strdup(yytext); return(CONST);}
-"vacio"			    { yylval.valor = strdup(yytext); return(VOID);}
 
 
 "si"			       { yylval.valor = strdup(yytext); return(IF); }
@@ -33,6 +32,8 @@ D	[0-9]
 "mientras"		{ yylval.valor = strdup(yytext); return(WHILE); }
 
 "regresar"		{ yylval.valor = strdup(yytext); return(RETURN); }
+
+"principal"		{	yylval.valor = strdup(yytext); return (MAIN);}
 
 "+="			{ yylval.valor = strdup(yytext); return(ASIGNACION_SUM); }
 "-="			{ yylval.valor = strdup(yytext); return(ASIGNACION_RES); }
