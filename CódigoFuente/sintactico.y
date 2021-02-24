@@ -16,16 +16,15 @@
 
 
 
-%token <valor> IDENTIFICADOR ENTERO DECIMAL CADENA CARACTER
-%token <valor> IF ELSE SWITCH CASE BREAK DEFAULT WHILE DO FOR RETURN
-%token <valor> ASIGNACION_SUM ASIGNACION_RES ASIGNACION_MUL ASIGNACION_DIV ASIGNACION_MOD
-%token <valor> OP_INC OP_DEC
-%token <valor> OP_AND OP_OR OP_MENIG OP_MAYIG OP_IGUAL OP_DIF
+%token <valor> MAIN IDENTIFICADOR ENTERO DECIMAL CADENA CARACTER
+%token <valor> OP_INC OP_DEC OP_MENIG OP_MAYIG OP_IGUAL OP_DIF
+%token <valor> OP_AND OP_OR
+%token <valor> ASIGNACION_MUL ASIGNACION_DIV ASIGNACION_MOD ASIGNACION_SUM ASIGNACION_RES
 %token <valor>  ';' '{' '}' ',' ':' '=' '(' ')' '[' ']'
 %token <valor> '.' '&' '!' '-' '+' '*' '/' '%' '<' '>' '^' '|' '?'
-%token <valor> CHAR INT FLOAT STRING CONST MAIN
+%token <valor> CHAR INT FLOAT STRING CONST
+%token <valor> CASE DEFAULT IF ELSE SWITCH WHILE DO FOR BREAK RETURN
 
-%type <valor> Tipo
 %type <valor> Contenido
 %type <valor> Lista_atributos
 %type <valor> Atributo
@@ -35,37 +34,24 @@
 %type <valor> DeclararVariable
 %type <valor> DeclararConstante
 
-%left Lista_atributos
-%left Codigo
-
 %start Funcion
-
 %%
 
 Funcion
-  : IDENTIFICADOR '(' ')' Contenido                     { char *tmp=strdup($1);printf("Se declara funcion %s\nContiene lo siguiente:\n%s",tmp,$4);}
-  | IDENTIFICADOR '(' Lista_atributos ')' Contenido     { char *tmp=strdup($1);printf("Se declara funcion %s\nContiene los siguientes atributos: %s\nContiene lo siguiente:\n%s",tmp,$3,$5);}
-  | MAIN '(' ')' Contenido                       { printf("Se declara funcion %s\nContiene lo siguiente:\n%s",$1,$4);}
-  | MAIN '(' Lista_atributos ')' Contenido       { printf("Se declara funcion %s\nContiene los siguientes atributos: %s\nContiene lo siguiente: \n%s",$1,$3,$5);}
+  : IDENTIFICADOR '(' ')' Contenido                     { printf("Se declara funcion %s\nContiene lo siguiente:\n%s",$1,$4);}
+  | IDENTIFICADOR '(' Lista_atributos ')' Contenido     { printf("Se declara funcion %s\nContiene los siguientes atributos: %s\nContiene lo siguiente:\n%s",$1,$3,$5);}
+  | MAIN '(' ')' Contenido                              { printf("Se declara funcion %s\nContiene lo siguiente:\n%s",$1,$4);}
+  | MAIN '(' Lista_atributos ')' Contenido              { printf("Se declara funcion %s\nContiene los siguientes atributos: %s\nContiene lo siguiente: \n%s",$1,$3,$5);}
 ;
 
 Lista_atributos
-  : Atributo                      {$$=$1}
-  | Lista_atributos ',' Atributo  {strcat($1,$3);$$=$1}
+  : Atributo                      {$$=$1;}
+  | Lista_atributos ',' Atributo  {strcat($1,$3);$$=$1;}
 ;
 
-Atributo : Tipo IDENTIFICADOR     { char *tmp=strdup($1);strcpy($1,"\n\t* Atributo: tipo ");strcat($1,tmp); strcpy(tmp," de nombre ");strcat($1,tmp);strcat($1,$2);$$=$1;};
+Atributo : Tipo IDENTIFICADOR     { char *tmp=strdup($1);strcpy($1,"\n\t* Atributo: ");strcat($1,tmp);strcat($1,$2);$$=$1;};
 
-Tipo
-  : INT       {$$="entero";}
-  | FLOAT     {$$="decimal";}
-  | STRING    {$$="cadena";}
-  | CHAR      {$$="caracter";}
-;
-
-Contenido
-  : '{' Codigo '}' {$$=$2;}
-  ;
+Contenido : '{' Codigo '}' {$$=$2;};
 
 Codigo
   : Linea           {$$=$1;}
@@ -82,11 +68,14 @@ Declaraciones
   ;
 
 DeclararVariable
-  : Tipo IDENTIFICADOR ';'                    {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable: ");strcat($1,tmp); strcat($1,$2);$$=$1;}
-  | CHAR IDENTIFICADOR '=' CARACTER ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable caracter: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
+  : CHAR IDENTIFICADOR '=' CARACTER ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable caracter: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
   | INT IDENTIFICADOR '=' ENTERO ';'          {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable entero: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
   | FLOAT IDENTIFICADOR '=' DECIMAL ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable decimal: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
   | STRING IDENTIFICADOR '=' CADENA ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable cadena: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
+  | CHAR IDENTIFICADOR ';'                    {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable caracter: ");strcat($1,tmp); strcat($1,$2);$$=$1;}
+  | INT IDENTIFICADOR ';'                     {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable entero: ");strcat($1,tmp); strcat($1,$2);$$=$1;}
+  | FLOAT IDENTIFICADOR ';'                   {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable decimal: ");strcat($1,tmp); strcat($1,$2);$$=$1;}
+  | STRING IDENTIFICADOR ';'                  {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable cadena: ");strcat($1,tmp); strcat($1,$2);$$=$1;}
   ;
 
 
