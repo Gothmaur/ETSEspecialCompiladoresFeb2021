@@ -40,7 +40,8 @@
 %type <valor> expresion_cast
 %type <valor> expresion_unaria
 %type <valor> expresion_postfija
-%type <valor> expresion_primaria
+%type <valor> expresion_numerica
+%type <valor> expresion_alfanumerica
 %type <valor> Lista_Argumentos
 %type <valor> Encadenar
 
@@ -91,7 +92,8 @@ Declaraciones
   ;
 
 DeclararVariable
-  : Atributo '=' expresion_primaria ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable cadena: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
+  : Atributo '=' expresion_numerica ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable numerica: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
+  | Atributo '=' expresion_alfanumerica ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable alfanumerica: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
   | Atributo ';'                              {$$ = $1;}
   ;
 
@@ -135,20 +137,23 @@ expresion_cast
 	;
 
 expresion_postfija
-	: expresion_primaria                                        {$$ = $1;}
+	: expresion_numerica                                        {$$ = $1;}
+  | IDENTIFICADOR                                             {$$ = $1;}
 	| expresion_postfija '(' ')' 			                          {strcat($1,"()");$$ = $1;}
 	| expresion_postfija '(' Lista_Argumentos ')'	             	{strcat($1,"(");strcat($1,$3);strcat($1,")");$$=$1;}
 	| expresion_postfija OP_INC	                                {strcat($1," ");strcat($1,$2);$$=$1;}
 	| expresion_postfija OP_DEC	                                {strcat($1," ");strcat($1,$2);$$=$1;}
 	;
 
-  expresion_primaria
-  	: IDENTIFICADOR        {$$ = $1;}
-  	| ENTERO 	             {$$ = $1;}
+  expresion_numerica
+  	: ENTERO 	             {$$ = $1;}
   	| DECIMAL              {$$ = $1;}
-  	| CADENA               {$$ = $1;}
-  	| CARACTER             {$$ = $1;}
   	;
+
+  expresion_alfanumerica
+    : CADENA
+    | CARACTER
+    ;
 
   Lista_Argumentos
     :expresion_postfija                        {$$=$1}
@@ -156,8 +161,10 @@ expresion_postfija
     ;
 
 Encadenar
-  : expresion_cast
-  | Encadenar '.' expresion_cast
+  : IDENTIFICADOR
+  | expresion_alfanumerica
+  | Encadenar '.' IDENTIFICADOR
+  | Encadenar '.' expresion_alfanumerica
   ;
 
 %%
