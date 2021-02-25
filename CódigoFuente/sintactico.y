@@ -109,6 +109,10 @@ Asignaciones
   :IDENTIFICADOR '=' Suma    {strcat($1,$2);strcat($1,$3);$$=$1;}
   |IDENTIFICADOR '=' Encadenar      {strcat($1,$2);strcat($1,$3);$$=$1;}
   |IDENTIFICADOR ASIGNACION_SUM expresion_numerica  {strcat($1,$2);strcat($1,$3);$$=$1;}
+  |IDENTIFICADOR ASIGNACION_RES expresion_numerica  {strcat($1,$2);strcat($1,$3);$$=$1;}
+  |IDENTIFICADOR ASIGNACION_MUL expresion_numerica  {strcat($1,$2);strcat($1,$3);$$=$1;}
+  |IDENTIFICADOR ASIGNACION_DIV expresion_numerica  {strcat($1,$2);strcat($1,$3);$$=$1;}
+  |IDENTIFICADOR ASIGNACION_MOD expresion_numerica  {strcat($1,$2);strcat($1,$3);$$=$1;}
   ;
 
 
