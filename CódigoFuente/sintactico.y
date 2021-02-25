@@ -34,6 +34,7 @@
 %type <valor> Declaraciones
 %type <valor> DeclararVariable
 %type <valor> DeclararConstante
+%type <valor> Asignaciones
 %type <valor> Operaciones
 %type <valor> Numericas
 %type <valor> Suma
@@ -42,6 +43,8 @@
 %type <valor> expresion_unaria
 %type <valor> expresion_postfija
 %type <valor> expresion_primaria
+%type <valor> Lista_Argumentos
+%type <valor> Encadenar
 
 %start Funcion
 %%
@@ -107,6 +110,7 @@ DeclararConstante
 
 Asignaciones
   :IDENTIFICADOR '=' Operaciones    {strcat($1,$2);strcat($1,$3);$$=$1;}
+  |IDENTIFICADOR '=' Encadenar      {strcat($1,$2);strcat($1,$3);$$=$1;}
   ;
 
 Operaciones
@@ -121,7 +125,7 @@ Numericas
 Suma
   : Producto            {$$=$1;}
   | Suma '+' Producto 	{strcat($1," + ");strcat($1,$3);$$=$1;}
-  | Suma '-' Suma 	    {strcat($1," - ");strcat($1,$3);$$=$1;}
+  | Suma '-' Producto 	    {strcat($1," - ");strcat($1,$3);$$=$1;}
   ;
 
 Producto
@@ -159,7 +163,13 @@ expresion_postfija
   	;
 
   Lista_Argumentos
-    :expresion_postfija;                        {$$=$1}
+    :expresion_postfija                        {$$=$1}
     |Lista_Argumentos ',' expresion_postfija    {strcat($1,$2);strcat($1,$3);$$=$1;}
     ;
+
+Encadenar
+  : expresion_cast
+  | Encadenar '.' expresion_cast
+  ;
+
 %%
