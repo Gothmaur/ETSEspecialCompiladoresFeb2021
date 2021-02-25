@@ -108,6 +108,7 @@ DeclararConstante
 Asignaciones
   :IDENTIFICADOR '=' Suma    {strcat($1,$2);strcat($1,$3);$$=$1;}
   |IDENTIFICADOR '=' Encadenar      {strcat($1,$2);strcat($1,$3);$$=$1;}
+  |IDENTIFICADOR ASIGNACION_SUM expresion_numerica  {strcat($1,$2);strcat($1,$3);$$=$1;}
   ;
 
 
@@ -151,20 +152,18 @@ expresion_postfija
   	;
 
   expresion_alfanumerica
-    : CADENA
-    | CARACTER
+    : CADENA    {$$=$1;}
+    | CARACTER  {$$=$1;}
     ;
 
   Lista_Argumentos
-    :expresion_postfija                        {$$=$1}
+    :expresion_postfija                        {$$=$1;}
     |Lista_Argumentos ',' expresion_postfija    {strcat($1,$2);strcat($1,$3);$$=$1;}
     ;
 
 Encadenar
-  : IDENTIFICADOR
-  | expresion_alfanumerica
-  | Encadenar '.' IDENTIFICADOR
-  | Encadenar '.' expresion_alfanumerica
+  : expresion_alfanumerica                {$$=$1;}
+  | Encadenar '.' expresion_alfanumerica  {$$=$1;}
   ;
 
 %%
