@@ -28,19 +28,28 @@
 %type <valor> Contenido
 %type <valor> Lista_atributos
 %type <valor> Atributo
+%type <valor> Tipo
 %type <valor> Codigo
 %type <valor> Linea
 %type <valor> Declaraciones
 %type <valor> DeclararVariable
 %type <valor> DeclararConstante
+%type <valor> Operaciones
+%type <valor> Numericas
+%type <valor> Suma
+%type <valor> Producto
+%type <valor> expresion_cast
+%type <valor> expresion_unaria
+%type <valor> expresion_postfija
+%type <valor> expresion_primaria
 
 %start Funcion
 %%
 
 Funcion
-  : IDENTIFICADOR '(' ')' Contenido                     { printf("Se declara funcion %s\nContiene lo siguiente:\n%s",$1,$4);}
+  : IDENTIFICADOR Contenido                             { printf("Se declara funcion %s\nContiene lo siguiente:\n%s",$1,$2);}
   | IDENTIFICADOR '(' Lista_atributos ')' Contenido     { printf("Se declara funcion %s\nContiene los siguientes atributos: %s\nContiene lo siguiente:\n%s",$1,$3,$5);}
-  | MAIN '(' ')' Contenido                              { printf("Se declara funcion %s\nContiene lo siguiente:\n%s",$1,$4);}
+  | MAIN Contenido                                      { printf("Se declara funcion %s\nContiene lo siguiente:\n%s",$1,$2);}
   | MAIN '(' Lista_atributos ')' Contenido              { printf("Se declara funcion %s\nContiene los siguientes atributos: %s\nContiene lo siguiente: \n%s",$1,$3,$5);}
 ;
 
@@ -49,9 +58,21 @@ Lista_atributos
   | Lista_atributos ',' Atributo  {strcat($1,$3);$$=$1;}
 ;
 
-Atributo : Tipo IDENTIFICADOR     { char *tmp=strdup($1);strcpy($1,"\n\t* Atributo: ");strcat($1,tmp);strcat($1,$2);$$=$1;};
+Atributo
+  : Tipo IDENTIFICADOR        { char *tmp=strdup($1);strcpy($1,"\n\t* variable: ");strcat($1,tmp);strcat($1,$2);$$=$1;}
+  ;
 
-Contenido : '{' Codigo '}' {$$=$2;};
+Tipo
+	: CHAR 		{$$=$1;}
+	| INT 		{$$=$1;}
+	| FLOAT 	{$$=$1;}
+	| STRING 		{$$=$1;}
+	;
+
+Contenido
+  : '{' '}'             {printf("\nVacio");}
+  | '{' Codigo '}'      {$$=$2;}
+  ;
 
 Codigo
   : Linea           {$$=$1;}
@@ -60,6 +81,7 @@ Codigo
 
 Linea
   : Declaraciones    {$$=$1;}
+  | Asignaciones      {$$=$1;}
   ;
 
 Declaraciones
@@ -72,16 +94,72 @@ DeclararVariable
   | INT IDENTIFICADOR '=' ENTERO ';'          {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable entero: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
   | FLOAT IDENTIFICADOR '=' DECIMAL ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable decimal: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
   | STRING IDENTIFICADOR '=' CADENA ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable cadena: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
-  | CHAR IDENTIFICADOR ';'                    {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable caracter: ");strcat($1,tmp); strcat($1,$2);$$=$1;}
-  | INT IDENTIFICADOR ';'                     {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable entero: ");strcat($1,tmp); strcat($1,$2);$$=$1;}
-  | FLOAT IDENTIFICADOR ';'                   {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable decimal: ");strcat($1,tmp); strcat($1,$2);$$=$1;}
-  | STRING IDENTIFICADOR ';'                  {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable cadena: ");strcat($1,tmp); strcat($1,$2);$$=$1;}
+  | Atributo ';'                              {$$ = $1;}
   ;
 
 
-  DeclararConstante
-    : CONST CHAR IDENTIFICADOR '=' CARACTER ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante caracter: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);strcat($1,$5);$$=$1;}
-    | CONST INT IDENTIFICADOR '=' ENTERO ';'          {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante entero: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);strcat($1,$5);$$=$1;}
-    | CONST FLOAT IDENTIFICADOR '=' DECIMAL ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante decimal: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);strcat($1,$5);$$=$1;}
-    | CONST STRING IDENTIFICADOR '=' CADENA ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante cadena: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);strcat($1,$5);$$=$1;}
+DeclararConstante
+  : CONST CHAR IDENTIFICADOR '=' CARACTER ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante caracter: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);strcat($1,$5);$$=$1;}
+  | CONST INT IDENTIFICADOR '=' ENTERO ';'          {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante entero: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);strcat($1,$5);$$=$1;}
+  | CONST FLOAT IDENTIFICADOR '=' DECIMAL ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante decimal: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);strcat($1,$5);$$=$1;}
+  | CONST STRING IDENTIFICADOR '=' CADENA ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante cadena: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);strcat($1,$5);$$=$1;}
+  ;
+
+Asignaciones
+  :IDENTIFICADOR '=' Operaciones    {strcat($1,$2);strcat($1,$3);$$=$1;}
+  ;
+
+Operaciones
+  :Numericas    {$$=$1;}
+  ;
+
+Numericas
+  : Suma        {$$=$1;}
+  | Producto    {$$=$1;}
+  ;
+
+Suma
+  : Producto            {$$=$1;}
+  | Suma '+' Producto 	{strcat($1," + ");strcat($1,$3);$$=$1;}
+  | Suma '-' Suma 	    {strcat($1," - ");strcat($1,$3);$$=$1;}
+  ;
+
+Producto
+  : expresion_cast               	{$$=$1;}
+  | Producto '*' expresion_cast 	{strcat($1," * ");strcat($1,$3);$$=$1;}
+  | Producto '/' expresion_cast 	{strcat($1," / ");strcat($1,$3);$$=$1;}
+  | Producto '%' expresion_cast 	{strcat($1," % ");strcat($1,$3);$$=$1;}
+  ;
+
+expresion_cast
+  : expresion_unaria            {$$=$1;}
+  | '(' Tipo ')' expresion_cast {strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
+  ;
+
+  expresion_unaria
+	: expresion_postfija	             {$$ = $1;}
+	| OP_INC expresion_unaria	         {strcat($1," ");strcat($1,$2);$$=$1;}
+	| OP_DEC expresion_unaria	         {strcat($1," ");strcat($1,$2);$$=$1;}
+	;
+
+expresion_postfija
+	: expresion_primaria                                        {$$ = $1;}
+	| expresion_postfija '(' ')' 			                          {strcat($1,"()");$$ = $1;}
+	| expresion_postfija '(' Lista_Argumentos ')'	             	{strcat($1,"(");strcat($1,$3);strcat($1,")");$$=$1;}
+	| expresion_postfija OP_INC	                                {strcat($1," ");strcat($1,$2);$$=$1;}
+	| expresion_postfija OP_DEC	                                {strcat($1," ");strcat($1,$2);$$=$1;}
+	;
+
+  expresion_primaria
+  	: IDENTIFICADOR        {$$ = $1;}
+  	| ENTERO 	             {$$ = $1;}
+  	| DECIMAL              {$$ = $1;}
+  	| CADENA               {$$ = $1;}
+  	| CARACTER             {$$ = $1;}
+  	;
+
+  Lista_Argumentos
+    :expresion_postfija;                        {$$=$1}
+    |Lista_Argumentos ',' expresion_postfija    {strcat($1,$2);strcat($1,$3);$$=$1;}
     ;
+%%
