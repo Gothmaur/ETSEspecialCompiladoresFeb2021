@@ -21,7 +21,10 @@
 %token <valor> OP_AND OP_OR
 %token <valor> ASIGNACION_MUL ASIGNACION_DIV ASIGNACION_MOD ASIGNACION_SUM ASIGNACION_RES
 %token <valor>  ';' '{' '}' ',' ':' '=' '(' ')' '[' ']'
-%token <valor> '.' '&' '!' '-' '+' '*' '/' '%' '<' '>' '^' '|' '?'
+%token <valor> '.' '&' '!'
+%left <valor>  '-' '+'
+%left <valor> '*' '/' '%'
+%token <valor> '<' '>' '^' '|' '?'
 %token <valor> CHAR INT FLOAT STRING CONST
 %token <valor> CASE DEFAULT IF ELSE SWITCH WHILE DO FOR BREAK RETURN
 
