@@ -35,8 +35,6 @@
 %type <valor> DeclararVariable
 %type <valor> DeclararConstante
 %type <valor> Asignaciones
-%type <valor> Operaciones
-%type <valor> Numericas
 %type <valor> Suma
 %type <valor> Producto
 %type <valor> expresion_cast
@@ -93,10 +91,7 @@ Declaraciones
   ;
 
 DeclararVariable
-  : CHAR IDENTIFICADOR '=' CARACTER ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable caracter: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
-  | INT IDENTIFICADOR '=' ENTERO ';'          {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable entero: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
-  | FLOAT IDENTIFICADOR '=' DECIMAL ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable decimal: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
-  | STRING IDENTIFICADOR '=' CADENA ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable cadena: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
+  : Atributo '=' expresion_primaria ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable cadena: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
   | Atributo ';'                              {$$ = $1;}
   ;
 
@@ -109,18 +104,11 @@ DeclararConstante
   ;
 
 Asignaciones
-  :IDENTIFICADOR '=' Operaciones    {strcat($1,$2);strcat($1,$3);$$=$1;}
+  :IDENTIFICADOR '=' Suma    {strcat($1,$2);strcat($1,$3);$$=$1;}
   |IDENTIFICADOR '=' Encadenar      {strcat($1,$2);strcat($1,$3);$$=$1;}
   ;
 
-Operaciones
-  :Numericas    {$$=$1;}
-  ;
 
-Numericas
-  : Suma        {$$=$1;}
-  | Producto    {$$=$1;}
-  ;
 
 Suma
   : Producto            {$$=$1;}
