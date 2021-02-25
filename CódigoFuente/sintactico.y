@@ -94,7 +94,7 @@ Declaraciones
 DeclararVariable
   : Atributo '=' expresion_numerica ';'           {strcat($1," ");strcat($1,$2);strcat($1," ");strcat($1,$3);strcat($1,$4);$$=$1;}
   | Atributo '=' expresion_alfanumerica ';'       {strcat($1," ");strcat($1,$2);strcat($1," ");strcat($1,$3);strcat($1,$4);$$=$1;}
-  | Atributo ';'                                  {strcat($1," ");strcat($1,$2);;strcat($1,$3);$$=$1;}
+  | Atributo ';'                                  {strcat($1,$2);$$=$1;}
   ;
 
 
