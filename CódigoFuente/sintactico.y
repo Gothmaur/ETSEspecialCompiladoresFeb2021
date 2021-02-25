@@ -72,7 +72,7 @@ Tipo
 	;
 
 Contenido
-  : '{' '}'             {printf("\nVacio");}
+  : '{' '}'             {strcpy($1,"\n\tVacio");$$=$1;}
   | '{' Codigo '}'      {$$=$2;}
   ;
 
