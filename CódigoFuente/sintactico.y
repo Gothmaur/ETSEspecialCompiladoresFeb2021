@@ -61,7 +61,7 @@ Lista_atributos
 ;
 
 Atributo
-  : Tipo IDENTIFICADOR        { char *tmp=strdup($1);strcpy($1,"\n\t* variable: ");strcat($1,tmp);strcat($1,$2);$$=$1;}
+  : Tipo IDENTIFICADOR        { char *tmp=strdup($1);strcpy($1,"\n\t* variable: ");strcat($1,tmp);strcat($1," ");($1,$2);$$=$1;}
   ;
 
 Tipo
@@ -92,27 +92,27 @@ Declaraciones
   ;
 
 DeclararVariable
-  : Atributo '=' expresion_numerica ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable numerica: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
-  | Atributo '=' expresion_alfanumerica ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de variable alfanumerica: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
-  | Atributo ';'                              {$$ = $1;}
+  : Atributo '=' expresion_numerica ';'           {strcat($1," ");strcat($1,$2);strcat($1," ");strcat($1,$3);strcat($1,$4);$$=$1;}
+  | Atributo '=' expresion_alfanumerica ';'       {strcat($1," ");strcat($1,$2);strcat($1," ");strcat($1,$3);strcat($1,$4);$$=$1;}
+  | Atributo ';'                                  {strcat($1," ");strcat($1,$2);;strcat($1,$3);$$=$1;}
   ;
 
 
 DeclararConstante
-  : CONST CHAR IDENTIFICADOR '=' CARACTER ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante caracter: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);strcat($1,$5);$$=$1;}
-  | CONST INT IDENTIFICADOR '=' ENTERO ';'          {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante entero: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);strcat($1,$5);$$=$1;}
-  | CONST FLOAT IDENTIFICADOR '=' DECIMAL ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante decimal: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);strcat($1,$5);$$=$1;}
-  | CONST STRING IDENTIFICADOR '=' CADENA ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante cadena: ");strcat($1,tmp); strcat($1,$2);strcat($1,$3);strcat($1,$4);strcat($1,$5);$$=$1;}
+  : CONST CHAR IDENTIFICADOR '=' CARACTER ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante caracter: ");strcat($1,tmp); strcat($1," ");strcat($1,$2);strcat($1," ");strcat($1,$3);strcat($1," ");strcat($1,$4);strcat($1," ");strcat($1,$5);$$=$1;}
+  | CONST INT IDENTIFICADOR '=' ENTERO ';'          {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante entero: ");strcat($1,tmp); strcat($1," ");strcat($1,$2);strcat($1," ");strcat($1,$3);strcat($1," ");strcat($1,$4);strcat($1," ");strcat($1,$5);$$=$1;}
+  | CONST FLOAT IDENTIFICADOR '=' DECIMAL ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante decimal: ");strcat($1,tmp); strcat($1," ");strcat($1,$2);strcat($1," ");strcat($1,$3);strcat($1," ");strcat($1,$4);strcat($1," ");strcat($1,$5);$$=$1;}
+  | CONST STRING IDENTIFICADOR '=' CADENA ';'       {char *tmp=strdup($1);strcpy($1,"\n\t* Declaracion de constante cadena: ");strcat($1,tmp); strcat($1," ");strcat($1,$2);strcat($1," ");strcat($1,$3);strcat($1," ");strcat($1,$4);strcat($1," ");strcat($1,$5);$$=$1;}
   ;
 
 Asignaciones
-  :IDENTIFICADOR '=' Suma ';'                          {strcat($1,$2);strcat($1,$3);$$=$1;}
-  |IDENTIFICADOR '=' Encadenar ';'                     {strcat($1,$2);strcat($1,$3);$$=$1;}
-  |IDENTIFICADOR ASIGNACION_SUM expresion_numerica ';' {strcat($1,$2);strcat($1,$3);$$=$1;}
-  |IDENTIFICADOR ASIGNACION_RES expresion_numerica ';' {strcat($1,$2);strcat($1,$3);$$=$1;}
-  |IDENTIFICADOR ASIGNACION_MUL expresion_numerica ';' {strcat($1,$2);strcat($1,$3);$$=$1;}
-  |IDENTIFICADOR ASIGNACION_DIV expresion_numerica ';' {strcat($1,$2);strcat($1,$3);$$=$1;}
-  |IDENTIFICADOR ASIGNACION_MOD expresion_numerica ';' {strcat($1,$2);strcat($1,$3);$$=$1;}
+  :IDENTIFICADOR '=' Suma ';'                          {strcat($1,$2);strcat($1," ");strcat($1,$3);$$=$1;}
+  |IDENTIFICADOR '=' Encadenar ';'                     {strcat($1,$2);strcat($1," ");strcat($1,$3);$$=$1;}
+  |IDENTIFICADOR ASIGNACION_SUM expresion_numerica ';' {strcat($1,$2);strcat($1," ");strcat($1,$3);$$=$1;}
+  |IDENTIFICADOR ASIGNACION_RES expresion_numerica ';' {strcat($1,$2);strcat($1," ");strcat($1,$3);$$=$1;}
+  |IDENTIFICADOR ASIGNACION_MUL expresion_numerica ';' {strcat($1,$2);strcat($1," ");strcat($1,$3);$$=$1;}
+  |IDENTIFICADOR ASIGNACION_DIV expresion_numerica ';' {strcat($1,$2);strcat($1," ");strcat($1,$3);$$=$1;}
+  |IDENTIFICADOR ASIGNACION_MOD expresion_numerica ';' {strcat($1,$2);strcat($1," ");strcat($1,$3);$$=$1;}
   ;
 
 
@@ -132,7 +132,7 @@ Producto
 
 expresion_cast
   : expresion_unaria            {$$=$1;}
-  | '(' Tipo ')' expresion_cast {strcat($1,$2);strcat($1,$3);strcat($1,$4);$$=$1;}
+  | '(' Tipo ')' expresion_cast {strcat($1,$2);strcat($1,$3);strcat($1," ");strcat($1,$4);$$=$1;}
   ;
 
   expresion_unaria
@@ -162,7 +162,7 @@ expresion_postfija
 
   Lista_Argumentos
     :expresion_postfija                        {$$=$1;}
-    |Lista_Argumentos ',' expresion_postfija    {strcat($1,$2);strcat($1,$3);$$=$1;}
+    |Lista_Argumentos ',' expresion_postfija    {strcat($1,$2);strcat($1," ");strcat($1,$3);$$=$1;}
     ;
 
 Encadenar
